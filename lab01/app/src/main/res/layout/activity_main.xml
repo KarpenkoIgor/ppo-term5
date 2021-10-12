@@ -45,8 +45,9 @@
                 />
             <TextView
                 style="@style/ActionButton"
+                android:textSize="40sp"
                 android:id="@+id/btn_back"
-                android:text="Back"
+                android:text="-->"
                 />
             <TextView
                 style="@style/ActionButton"
@@ -55,7 +56,7 @@
                 />
             <TextView
                 style="@style/ActionButton"
-                android:id="@+id/btn_dev"
+                android:id="@+id/btn_div"
                 android:text="÷"
                 />
 

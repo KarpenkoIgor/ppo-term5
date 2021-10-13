@@ -67,9 +67,7 @@ class ScientificCalculator : Fragment() {
             requireActivity().findViewById<TextView>(R.id.math_operation),
             requireActivity().findViewById<TextView>(R.id.result_text))}
         view.findViewById<TextView>(R.id.btn_proc)
-            .setOnClickListener {Handler.percentButtonHandler(view,
-            requireActivity().findViewById<TextView>(R.id.math_operation),
-            requireActivity().findViewById<TextView>(R.id.result_text))}
+            .setOnClickListener {workingWithLines(view,"%")}
         view.findViewById<TextView>(R.id.btn_div)
             .setOnClickListener {workingWithLines(view,"÷")}
         view.findViewById<TextView>(R.id.btn_e)

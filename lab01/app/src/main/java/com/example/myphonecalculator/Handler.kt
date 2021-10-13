@@ -15,6 +15,7 @@ object Handler {
 
     fun handler(v: View?, str:String, inputLine:TextView, resultLine: TextView){
         minTextSize(v,inputLine, resultLine)
+        if(inputLine.text.last() == '°') this.angleConf = "deg"
         if((inputLine.text.last() == '°'|| inputLine.text.endsWith("sin(")
             || inputLine.text.endsWith("cos(")
             || inputLine.text.endsWith("tan("))
@@ -32,7 +33,9 @@ object Handler {
                 return
             }
             else  {
+                if(inputLine.text.last() == '(') inputLine.append("0")
                 inputLine.append(")")
+                this.angleConf = v!!.findViewById<TextView>(R.id.btn_dr).text.toString()
             }
         }
         if(this.currentAnswer != "") {
@@ -61,10 +64,19 @@ object Handler {
                 inputLine.append("×" + str)
             else inputLine.append(str)
         }
-        else if (str in arrayOf("+","-","×","÷","^","^(-1)","!")){
-            if (inputLine.text.last() in arrayOf('+','-','×','÷','^')){
+        else if (str in arrayOf("+","-","×","÷","^","^(-1)","!","%")){
+            if(inputLine.text == "0" && str == "-")
+                inputLine.text = "-"
+            else if (inputLine.text.last() in arrayOf('+','-','×','÷','^')){
                 inputLine.text = inputLine.text.dropLast(1)
                 inputLine.append(str)
+            }
+            else if (inputLine.text.last() == '%'){
+                if(str == "-") inputLine.append("(" + str)
+                else {
+                    inputLine.text = inputLine.text.dropLast(1)
+                    inputLine.append(str)
+                }
             }
             else if (inputLine.text.last() == '√'){
                 if(str == "-") inputLine.append("(" + str)
@@ -94,7 +106,7 @@ object Handler {
                 inputLine.append(str)
             }
             else{
-                if(inputLine.text.last() in "+-×÷^√"){
+                if(inputLine.text.last() in "+-×÷^√%"){
 
                 }
                 else if(getBracketsBalans(inputLine.text.toString())> 0){
@@ -124,10 +136,6 @@ object Handler {
         updateResultLine(v,inputLine, resultLine)
     }
 
-    fun percentButtonHandler(v: View?,inputLine:TextView, resultLine: TextView){
-        updateResultLine(v,inputLine, resultLine)
-    }
-
     private fun getTempNum(sym:String):String{
         if(sym in arrayOf("+", "-")) return "0"
         else if(sym in arrayOf("×","÷")) return "1"
@@ -138,6 +146,7 @@ object Handler {
         var tempLine:String = inputLine.text.toString()
         if (tempLine.last() in arrayOf('+', '-', '.')) tempLine += "0"
         if (tempLine.last() in arrayOf('×','÷','^','√')) tempLine += "1"
+        if (tempLine.last() == '%') tempLine += "1"
         if (tempLine.last() == '('){
             if(tempLine.length > 1 && tempLine.reversed()[1] in arrayOf('×','÷','+','-')){
                 tempLine += getTempNum(tempLine.reversed()[1].toString())
@@ -292,7 +301,7 @@ object Handler {
 var factorial: Operator = object : Operator("!", 1, true, PRECEDENCE_POWER + 1) {
     override fun apply(vararg args: Double): Double {
         val arg = args[0].toInt()
-        require(arg.toDouble() == args[0]) { "Not integer" }
+        require(args[0] - arg.toDouble() == 0.0) { "Not integer" }
         require(arg >= 0) { "Error" }
         var result = 1.0
         for (i in 1..arg) {

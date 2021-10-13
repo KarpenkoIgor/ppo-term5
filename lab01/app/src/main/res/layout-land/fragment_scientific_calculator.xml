@@ -20,27 +20,27 @@
             android:layout_width="match_parent"
             android:layout_height="0dp">
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_2nd"
                 android:text="2nd"
                 />
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_dr"
                 android:text="rad"
                 />
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_sin"
                 android:text="sin"
                 />
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_cos"
                 android:text="cos"
                 />
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_tan"
                 android:text="tan"
                 />
@@ -51,27 +51,27 @@
             android:layout_width="match_parent"
             android:layout_height="0dp">
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_degree"
                 android:text="x^y"
                 />
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_lg"
                 android:text="lg"
                 />
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_ln"
                 android:text="ln"
                 />
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_open_br"
                 android:text="("
                 />
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_close_br"
                 android:text=")"
                 />
@@ -83,28 +83,29 @@
             android:layout_width="match_parent"
             android:layout_height="0dp">
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_root"
                 android:text="√x"
                 />
             <TextView
-                style="@style/ActionButton"
+                style="@style/ActionButtonLand"
                 android:id="@+id/btn_AC"
                 android:text="CE"
                 />
+
             <TextView
-                style="@style/ActionButton"
-                android:textSize="40sp"
                 android:id="@+id/btn_back"
+                style="@style/ActionButtonLand"
+                android:gravity="center|top"
                 android:text="-->"
-                />
+                android:textSize="28sp" />
             <TextView
-                style="@style/ActionButton"
+                style="@style/ActionButtonLand"
                 android:id="@+id/btn_proc"
                 android:text="%"
                 />
             <TextView
-                style="@style/ActionButton"
+                style="@style/ActionButtonLand"
                 android:id="@+id/btn_div"
                 android:text="÷"
                 />
@@ -116,27 +117,27 @@
             android:layout_width="match_parent"
             android:layout_height="0dp">
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_fac"
                 android:text="x!"
                 />
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_7"
                 android:text="7"
                 />
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_8"
                 android:text="8"
                 />
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_9"
                 android:text="9"
                 />
             <TextView
-                style="@style/ActionButton"
+                style="@style/ActionButtonLand"
                 android:id="@+id/btn_mul"
                 android:text="×"
                 />
@@ -147,27 +148,27 @@
             android:layout_width="match_parent"
             android:layout_height="0dp">
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_inver"
                 android:text="1/x"
                 />
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_4"
                 android:text="4"
                 />
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_5"
                 android:text="5"
                 />
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_6"
                 android:text="6"
                 />
             <TextView
-                style="@style/ActionButton"
+                style="@style/ActionButtonLand"
                 android:id="@+id/btn_sub"
                 android:text="-"
                 />
@@ -178,27 +179,27 @@
             android:layout_width="match_parent"
             android:layout_height="0dp">
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_pi"
                 android:text="π"
                 />
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_1"
                 android:text="1"
                 />
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_2"
                 android:text="2"
                 />
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_3"
                 android:text="3"
                 />
             <TextView
-                style="@style/ActionButton"
+                style="@style/ActionButtonLand"
                 android:id="@+id/btn_add"
                 android:text="+"
                 />
@@ -209,27 +210,27 @@
             android:layout_width="match_parent"
             android:layout_height="0dp">
             <TextView
-                style="@style/ActionButton"
+                style="@style/DeadActionButton"
                 android:id="@+id/btn_change"
                 android:text="CM"
                 />
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_e"
                 android:text="e"
                 />
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_0"
                 android:text="0"
                 />
             <TextView
-                style="@style/NumberButton"
+                style="@style/NumberButtonLand"
                 android:id="@+id/btn_dot"
                 android:text="."
                 />
             <TextView
-                style="@style/ActionButton"
+                style="@style/ActionButtonLand"
                 android:id="@+id/btn_eq"
                 android:text="="
                 />

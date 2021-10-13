@@ -10,7 +10,7 @@ import androidx.core.text.isDigitsOnly
 import android.content.pm.ActivityInfo
 
 import android.app.Activity
-
+import android.content.res.Configuration
 
 
 class ScientificCalculator : Fragment() {
@@ -124,6 +124,9 @@ class ScientificCalculator : Fragment() {
             view.findViewById<TextView>(R.id.btn_dr)
                 .setOnClickListener {}
         }
+        if(resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE)
+            Handler.orientation = "port"
+        else Handler.orientation = "land"
     }
 
     companion object {
@@ -132,14 +135,15 @@ class ScientificCalculator : Fragment() {
     }
 
     private fun changeModToSimple(){
-        requireActivity().supportFragmentManager.beginTransaction().apply {
-            replace(R.id.flFragment, SimpleCalculator())
-            commit()
+        if(resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE){
+            requireActivity().supportFragmentManager.beginTransaction().apply {
+                replace(R.id.flFragment, SimpleCalculator())
+                commit()
+            }
         }
     }
 
     private fun workingWithLines(view: View, str:String){
-
         Handler.handler(view,str,
             requireActivity().findViewById<TextView>(R.id.math_operation),
             requireActivity().findViewById<TextView>(R.id.result_text)
@@ -181,5 +185,4 @@ class ScientificCalculator : Fragment() {
         view.findViewById<TextView>(R.id.btn_cos).setText(Handler.trigonometryConf + "cos")
         view.findViewById<TextView>(R.id.btn_tan).setText(Handler.trigonometryConf + "tan")
     }
-
 }

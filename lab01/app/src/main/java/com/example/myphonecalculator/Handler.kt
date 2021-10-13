@@ -1,5 +1,6 @@
 package com.example.myphonecalculator
 
+import android.graphics.Color
 import android.view.View
 import android.widget.TextView
 import net.objecthunter.exp4j.ExpressionBuilder
@@ -8,10 +9,40 @@ import net.objecthunter.exp4j.operator.Operator
 import kotlin.math.sqrt
 
 
+
+var factorial: Operator = object : Operator("!", 1, true, PRECEDENCE_POWER + 1) {
+    override fun apply(vararg args: Double): Double {
+        val arg = args[0].toInt()
+        require(args[0] - arg.toDouble() == 0.0) { "Not integer" }
+        require(arg >= 0) { "Error" }
+        var result = 1.0
+        for (i in 1..arg) {
+            result *= i.toDouble()
+        }
+        return result
+    }
+}
+
+var root: Operator = object : Operator("#", 1, false, PRECEDENCE_POWER + 1) {
+    override fun apply(vararg args: Double): Double {
+        val arg = args[0].toDouble()
+        require(arg >= 0) { "Error" }
+        return sqrt(arg)
+    }
+}
+
+var degree: Operator = object : Operator("~", 1, true, PRECEDENCE_POWER + 1) {
+    override fun apply(vararg args: Double): Double {
+        val arg = args[0].toDouble()
+        return arg*Math.PI/180
+    }
+}
+
 object Handler {
     private var currentAnswer = ""
     var angleConf = "rad"
     var trigonometryConf = ""
+    var orientation = "port"
 
     fun handler(v: View?, str:String, inputLine:TextView, resultLine: TextView){
         minTextSize(v,inputLine, resultLine)
@@ -65,7 +96,7 @@ object Handler {
             else inputLine.append(str)
         }
         else if (str in arrayOf("+","-","×","÷","^","^(-1)","!","%")){
-            if(inputLine.text == "0" && str == "-")
+            if(inputLine.text.last() == '0'&& inputLine.text.length == 1 && str == "-")
                 inputLine.text = "-"
             else if (inputLine.text.last() in arrayOf('+','-','×','÷','^')){
                 inputLine.text = inputLine.text.dropLast(1)
@@ -191,7 +222,6 @@ object Handler {
         catch (e: Exception){
             resultLine.text = e.message
         }
-        //resultLine.text = tempLine
     }
 
     fun clean(v: View?, inputLine:TextView, resultLine: TextView){
@@ -237,18 +267,30 @@ object Handler {
     //Reduces inputLine text size and increases resultLine
     private fun maxTextSize(v: View?, inputLine:TextView, resultLine: TextView){
         if(resultLine.text.isEmpty()) return
-        inputLine.textSize = 40.toFloat()
-        resultLine.textSize = 70.toFloat()
-        //inputLine.setTextColor(resources.getColor(android.R.color.darker_gray))
-        //resultLine.setTextColor(resources.getColor(R.color.black))
+        if(orientation == "port"){
+            inputLine.textSize = 40.toFloat()
+            resultLine.textSize = 70.toFloat() - getTextSizeBig(resultLine)
+        }
+        else{
+            inputLine.textSize = 30.toFloat()
+            resultLine.textSize = 40.toFloat()
+        }
+        inputLine.setTextColor(Color.parseColor("#AAAAAA"))
+        resultLine.setTextColor(Color.parseColor("#000000"))
     }
 
     //Increases inputLine text size and reduces resultLine
     private fun minTextSize(v: View?, inputLine:TextView, resultLine: TextView){
-        inputLine.textSize = 70.toFloat()
-        resultLine.textSize = 50.toFloat()
-        //inputLine.setTextColor(resources.getColor(R.color.black))
-        //resultLine.setTextColor(resources.getColor(android.R.color.darker_gray))
+        if(orientation == "port"){
+            inputLine.textSize = 70.toFloat()
+            resultLine.textSize = 50.toFloat() - getTextSize(resultLine)
+        }
+        else{
+            inputLine.textSize = 40.toFloat()
+            resultLine.textSize = 30.toFloat()
+        }
+        inputLine.setTextColor(Color.parseColor("#000000"))
+        resultLine.setTextColor(Color.parseColor("#AAAAAA"))
     }
 
     fun printResult(v: View? ,inputLine:TextView, resultLine: TextView){
@@ -291,37 +333,24 @@ object Handler {
         if (trigonometryConf == "") return true
         return false
     }
+
     fun isArcAvailable():Boolean{
         if (angleConf == "rad") return true
         return false
     }
 
-}
+    private fun getTextSize(resultLine: TextView):Float{
+        val step:Float = 1.5.toFloat()
+        if(resultLine.text.length < 9) return 0.0.toFloat()
+        return  step * (resultLine.text.length - 9)
+    }
 
-var factorial: Operator = object : Operator("!", 1, true, PRECEDENCE_POWER + 1) {
-    override fun apply(vararg args: Double): Double {
-        val arg = args[0].toInt()
-        require(args[0] - arg.toDouble() == 0.0) { "Not integer" }
-        require(arg >= 0) { "Error" }
-        var result = 1.0
-        for (i in 1..arg) {
-            result *= i.toDouble()
+    private fun getTextSizeBig(resultLine: TextView):Float{
+        val step:Float = 3.4.toFloat()
+        if(resultLine.text.length < 9) return 0.0.toFloat()
+        for (i in 9..19){
+            if(resultLine.text.length == i) return step*(i-9)
         }
-        return result
-    }
-}
-
-var root: Operator = object : Operator("#", 1, false, PRECEDENCE_POWER + 1) {
-    override fun apply(vararg args: Double): Double {
-        val arg = args[0].toDouble()
-        require(arg >= 0) { "Error" }
-        return sqrt(arg)
-    }
-}
-
-var degree: Operator = object : Operator("~", 1, true, PRECEDENCE_POWER + 1) {
-    override fun apply(vararg args: Double): Double {
-        val arg = args[0].toDouble()
-        return arg*Math.PI/180
+        return step*12
     }
 }

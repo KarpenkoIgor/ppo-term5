@@ -75,7 +75,6 @@ class SimpleCalculator : Fragment() {
         fun newInstance() = SimpleCalculator()
     }
 
-
     private fun changeModToScience(){
         requireActivity().supportFragmentManager.beginTransaction().apply {
             replace(R.id.flFragment, ScientificCalculator())
@@ -89,6 +88,4 @@ class SimpleCalculator : Fragment() {
             requireActivity().findViewById<TextView>(R.id.result_text)
         )
     }
-
-
 }

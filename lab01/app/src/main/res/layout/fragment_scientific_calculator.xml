@@ -90,7 +90,7 @@
             <TextView
                 style="@style/ActionButton"
                 android:id="@+id/btn_AC"
-                android:text="AC"
+                android:text="CE"
                 />
             <TextView
                 style="@style/ActionButton"

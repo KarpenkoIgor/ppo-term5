@@ -7,6 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.text.isDigitsOnly
+import android.content.pm.ActivityInfo
+
+import android.app.Activity
+
+
 
 class ScientificCalculator : Fragment() {
     override fun onCreateView(
@@ -19,46 +24,108 @@ class ScientificCalculator : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val btnCM: TextView = view.findViewById(R.id.btn_change)
-        btnCM.setOnClickListener {changeModToSimple()}
-        val btn0: TextView = view.findViewById(R.id.btn_0)
-        btn0.setOnClickListener {Handler.handler(view,"0")}
-        val btnDot: TextView = view.findViewById(R.id.btn_dot)
-        btnDot.setOnClickListener {Handler.handler(view,".")}
-        val btnEqual: TextView = view.findViewById(R.id.btn_eq)
-        btnEqual.setOnClickListener {Handler.printResult(view,)}
-        val btn1: TextView = view.findViewById(R.id.btn_1)
-        btn1.setOnClickListener {Handler.handler(view,"1")}
-        val btn2: TextView = view.findViewById(R.id.btn_2)
-        btn2.setOnClickListener {Handler.handler(view,"2")}
-        val btn3: TextView = view.findViewById(R.id.btn_3)
-        btn3.setOnClickListener {Handler.handler(view,"3")}
-        val btnAdd: TextView = view.findViewById(R.id.btn_add)
-        btnAdd.setOnClickListener {Handler.handler(view,"+")}
-        val btn4: TextView = view.findViewById(R.id.btn_4)
-        btn4.setOnClickListener {Handler.handler(view,"4")}
-        val btn5: TextView = view.findViewById(R.id.btn_5)
-        btn5.setOnClickListener {Handler.handler(view,"5")}
-        val btn6: TextView = view.findViewById(R.id.btn_6)
-        btn6.setOnClickListener {Handler.handler(view,"6")}
-        val btnSub: TextView = view.findViewById(R.id.btn_sub)
-        btnSub.setOnClickListener {Handler.handler(view,"-")}
-        val btn7: TextView = view.findViewById(R.id.btn_7)
-        btn7.setOnClickListener {Handler.handler(view,"7")}
-        val btn8: TextView = view.findViewById(R.id.btn_8)
-        btn8.setOnClickListener {Handler.handler(view,"8")}
-        val btn9: TextView = view.findViewById(R.id.btn_9)
-        btn9.setOnClickListener {Handler.handler(view,"9")}
-        val btnMul: TextView = view.findViewById(R.id.btn_mul)
-        btnMul.setOnClickListener {Handler.handler(view,"×")}
-        val btnAC: TextView = view.findViewById(R.id.btn_AC)
-        btnAC.setOnClickListener {Handler.clean(view,)}
-        val btnBack: TextView = view.findViewById(R.id.btn_back)
-        btnBack.setOnClickListener {Handler.stepBack(view,)}
-        val btnProc: TextView = view.findViewById(R.id.btn_proc)
-        btnProc.setOnClickListener {Handler.percentButtonHandler(view)}
-        val btnDiv: TextView = view.findViewById(R.id.btn_div)
-        btnDiv.setOnClickListener {Handler.handler(view,"÷")}
+        view.findViewById<TextView>(R.id.btn_change)
+            .setOnClickListener {changeModToSimple()}
+        view.findViewById<TextView>(R.id.btn_0)
+            .setOnClickListener {workingWithLines(view,"0")}
+        view.findViewById<TextView>(R.id.btn_dot)
+            .setOnClickListener {workingWithLines(view,".")}
+        view.findViewById<TextView>(R.id.btn_eq)
+            .setOnClickListener {Handler.printResult(view,
+            requireActivity().findViewById<TextView>(R.id.math_operation),
+            requireActivity().findViewById<TextView>(R.id.result_text))}
+        view.findViewById<TextView>(R.id.btn_1)
+            .setOnClickListener {workingWithLines(view,"1")}
+        view.findViewById<TextView>(R.id.btn_2)
+            .setOnClickListener {workingWithLines(view,"2")}
+        view.findViewById<TextView>(R.id.btn_3)
+            .setOnClickListener {workingWithLines(view,"3")}
+        view.findViewById<TextView>(R.id.btn_add)
+            .setOnClickListener {workingWithLines(view,"+")}
+        view.findViewById<TextView>(R.id.btn_4)
+            .setOnClickListener {workingWithLines(view,"4")}
+        view.findViewById<TextView>(R.id.btn_5)
+            .setOnClickListener {workingWithLines(view,"5")}
+        view.findViewById<TextView>(R.id.btn_6)
+            .setOnClickListener {workingWithLines(view,"6")}
+        view.findViewById<TextView>(R.id.btn_sub)
+            .setOnClickListener {workingWithLines(view,"-")}
+        view.findViewById<TextView>(R.id.btn_7)
+            .setOnClickListener {workingWithLines(view,"7")}
+        view.findViewById<TextView>(R.id.btn_8)
+            .setOnClickListener {workingWithLines(view,"8")}
+        view.findViewById<TextView>(R.id.btn_9)
+            .setOnClickListener {workingWithLines(view,"9")}
+        view.findViewById<TextView>(R.id.btn_mul)
+            .setOnClickListener {workingWithLines(view,"×")}
+        view.findViewById<TextView>(R.id.btn_AC)
+            .setOnClickListener {Handler.clean(view,
+            requireActivity().findViewById<TextView>(R.id.math_operation),
+            requireActivity().findViewById<TextView>(R.id.result_text))}
+        view.findViewById<TextView>(R.id.btn_back)
+            .setOnClickListener {Handler.stepBack(view,
+            requireActivity().findViewById<TextView>(R.id.math_operation),
+            requireActivity().findViewById<TextView>(R.id.result_text))}
+        view.findViewById<TextView>(R.id.btn_proc)
+            .setOnClickListener {Handler.percentButtonHandler(view,
+            requireActivity().findViewById<TextView>(R.id.math_operation),
+            requireActivity().findViewById<TextView>(R.id.result_text))}
+        view.findViewById<TextView>(R.id.btn_div)
+            .setOnClickListener {workingWithLines(view,"÷")}
+        view.findViewById<TextView>(R.id.btn_e)
+            .setOnClickListener {workingWithLines(view,"e")}
+        view.findViewById<TextView>(R.id.btn_pi)
+            .setOnClickListener {workingWithLines(view,"π")}
+        view.findViewById<TextView>(R.id.btn_inver)
+            .setOnClickListener {workingWithLines(view,"inv")}
+        view.findViewById<TextView>(R.id.btn_fac)
+            .setOnClickListener {workingWithLines(view,"!")}
+        view.findViewById<TextView>(R.id.btn_root)
+            .setOnClickListener {workingWithLines(view,"√")}
+        view.findViewById<TextView>(R.id.btn_degree)
+            .setOnClickListener {workingWithLines(view,"^")}
+        view.findViewById<TextView>(R.id.btn_lg)
+            .setOnClickListener {workingWithLines(view,"lg")}
+        view.findViewById<TextView>(R.id.btn_ln)
+            .setOnClickListener {workingWithLines(view,"ln")}
+        view.findViewById<TextView>(R.id.btn_open_br)
+            .setOnClickListener {workingWithLines(view,"(")}
+        view.findViewById<TextView>(R.id.btn_close_br)
+            .setOnClickListener {workingWithLines(view,")")}
+        view.findViewById<TextView>(R.id.btn_dr)
+            .setText(Handler.angleConf)
+        view.findViewById<TextView>(R.id.btn_sin)
+            .setText(Handler.trigonometryConf + "sin")
+        view.findViewById<TextView>(R.id.btn_sin)
+            .setOnClickListener {workingWithLines(view,"sin")}
+        view.findViewById<TextView>(R.id.btn_cos)
+            .setText(Handler.trigonometryConf + "cos")
+        view.findViewById<TextView>(R.id.btn_cos)
+            .setOnClickListener {workingWithLines(view,"cos")}
+        view.findViewById<TextView>(R.id.btn_tan)
+            .setText(Handler.trigonometryConf + "tan")
+        view.findViewById<TextView>(R.id.btn_tan)
+            .setOnClickListener {workingWithLines(view,"tan")}
+        if(Handler.isArcAvailable()){
+            view.findViewById<TextView>(R.id.btn_2nd).setTextColor(resources.getColor(R.color.black))
+            view.findViewById<TextView>(R.id.btn_2nd)
+                .setOnClickListener {changeTrigCong(view)}
+        }
+        else {
+            view.findViewById<TextView>(R.id.btn_2nd).setTextColor(resources.getColor(android.R.color.darker_gray))
+            view.findViewById<TextView>(R.id.btn_2nd)
+                .setOnClickListener {}
+        }
+        if(Handler.isRadAvailable()){
+            view.findViewById<TextView>(R.id.btn_dr).setTextColor(resources.getColor(R.color.black))
+            view.findViewById<TextView>(R.id.btn_dr)
+                .setOnClickListener {changeAngleConf(view)}
+        }
+        else {
+            view.findViewById<TextView>(R.id.btn_dr).setTextColor(resources.getColor(android.R.color.darker_gray))
+            view.findViewById<TextView>(R.id.btn_dr)
+                .setOnClickListener {}
+        }
     }
 
     companion object {
@@ -72,4 +139,49 @@ class ScientificCalculator : Fragment() {
             commit()
         }
     }
+
+    private fun workingWithLines(view: View, str:String){
+
+        Handler.handler(view,str,
+            requireActivity().findViewById<TextView>(R.id.math_operation),
+            requireActivity().findViewById<TextView>(R.id.result_text)
+        )
+    }
+
+    private fun changeAngleConf(view:View){
+        if(Handler.angleConf == "deg"){
+            Handler.angleConf= "rad"
+            view.findViewById<TextView>(R.id.btn_2nd).
+                setTextColor(resources.getColor(android.R.color.darker_gray))
+            view.findViewById<TextView>(R.id.btn_2nd)
+                .setOnClickListener {}
+        }
+        else{
+            Handler.angleConf = "deg"
+            view.findViewById<TextView>(R.id.btn_2nd).setTextColor(resources.getColor(R.color.black))
+            view.findViewById<TextView>(R.id.btn_2nd)
+                .setOnClickListener {changeTrigCong(view)}
+        }
+        view.findViewById<TextView>(R.id.btn_dr).setText(Handler.angleConf)
+    }
+
+    private fun changeTrigCong(view:View){
+        if(Handler.trigonometryConf == ""){
+            Handler.trigonometryConf = "a"
+            view.findViewById<TextView>(R.id.btn_dr).
+            setTextColor(resources.getColor(android.R.color.darker_gray))
+            view.findViewById<TextView>(R.id.btn_dr)
+                .setOnClickListener {}
+        }
+        else{
+            Handler.trigonometryConf = ""
+            view.findViewById<TextView>(R.id.btn_dr).setTextColor(resources.getColor(R.color.black))
+            view.findViewById<TextView>(R.id.btn_dr)
+                .setOnClickListener {changeAngleConf(view)}
+        }
+        view.findViewById<TextView>(R.id.btn_sin).setText(Handler.trigonometryConf + "sin")
+        view.findViewById<TextView>(R.id.btn_cos).setText(Handler.trigonometryConf + "cos")
+        view.findViewById<TextView>(R.id.btn_tan).setText(Handler.trigonometryConf + "tan")
+    }
+
 }

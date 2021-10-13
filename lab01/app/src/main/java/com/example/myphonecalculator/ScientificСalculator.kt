@@ -77,7 +77,7 @@ class ScientificCalculator : Fragment() {
         view.findViewById<TextView>(R.id.btn_pi)
             .setOnClickListener {workingWithLines(view,"π")}
         view.findViewById<TextView>(R.id.btn_inver)
-            .setOnClickListener {workingWithLines(view,"inv")}
+            .setOnClickListener {workingWithLines(view,"^(-1)")}
         view.findViewById<TextView>(R.id.btn_fac)
             .setOnClickListener {workingWithLines(view,"!")}
         view.findViewById<TextView>(R.id.btn_root)
@@ -149,15 +149,15 @@ class ScientificCalculator : Fragment() {
     }
 
     private fun changeAngleConf(view:View){
-        if(Handler.angleConf == "deg"){
-            Handler.angleConf= "rad"
+        if(Handler.angleConf == "rad"){
+            Handler.angleConf= "deg"
             view.findViewById<TextView>(R.id.btn_2nd).
                 setTextColor(resources.getColor(android.R.color.darker_gray))
             view.findViewById<TextView>(R.id.btn_2nd)
                 .setOnClickListener {}
         }
         else{
-            Handler.angleConf = "deg"
+            Handler.angleConf = "rad"
             view.findViewById<TextView>(R.id.btn_2nd).setTextColor(resources.getColor(R.color.black))
             view.findViewById<TextView>(R.id.btn_2nd)
                 .setOnClickListener {changeTrigCong(view)}

@@ -27,7 +27,7 @@
             <TextView
                 style="@style/NumberButton"
                 android:id="@+id/btn_dr"
-                android:text="deg"
+                android:text="rad"
                 />
             <TextView
                 style="@style/NumberButton"

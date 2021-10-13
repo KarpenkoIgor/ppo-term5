@@ -4,15 +4,37 @@ import android.view.View
 import android.widget.TextView
 import net.objecthunter.exp4j.ExpressionBuilder
 import androidx.core.text.isDigitsOnly
+import net.objecthunter.exp4j.operator.Operator
+import kotlin.math.sqrt
 
 
 object Handler {
     private var currentAnswer = ""
-    var angleConf = "deg"
+    var angleConf = "rad"
     var trigonometryConf = ""
 
     fun handler(v: View?, str:String, inputLine:TextView, resultLine: TextView){
         minTextSize(v,inputLine, resultLine)
+        if((inputLine.text.last() == '°'|| inputLine.text.endsWith("sin(")
+            || inputLine.text.endsWith("cos(")
+            || inputLine.text.endsWith("tan("))
+            && angleConf == "deg"
+        ){
+            if(str.isDigitsOnly() || str == ".") {
+                if(inputLine.text.last() == '('){
+                    inputLine.append(str + "°")
+                }
+                else{
+                    inputLine.text = inputLine.text.dropLast(1)
+                    inputLine.append(str + "°")
+                }
+                updateResultLine(v,inputLine, resultLine)
+                return
+            }
+            else  {
+                inputLine.append(")")
+            }
+        }
         if(this.currentAnswer != "") {
             if(str.last().isDigit()) inputLine.text = "0"
             else inputLine.text = this.currentAnswer
@@ -23,7 +45,7 @@ object Handler {
         }
         if(str.isDigitsOnly()) {
             if(getFirstDigit(inputLine.text.toString()) == "0") inputLine.text = inputLine.text.dropLast(1)
-
+            if(!inputLine.text.isEmpty() && inputLine.text.last() in "eπ!") inputLine.append("×")
             inputLine.append(str)
         }
         else if (str == "."){
@@ -39,12 +61,28 @@ object Handler {
                 inputLine.append("×" + str)
             else inputLine.append(str)
         }
-        else if (str in arrayOf("+","-","×","÷")){
-            if (inputLine.text.last() in arrayOf('+','-','×','÷')){
+        else if (str in arrayOf("+","-","×","÷","^","^(-1)","!")){
+            if (inputLine.text.last() in arrayOf('+','-','×','÷','^')){
                 inputLine.text = inputLine.text.dropLast(1)
                 inputLine.append(str)
             }
+            else if (inputLine.text.last() == '√'){
+                if(str == "-") inputLine.append("(" + str)
+                else {
+                    inputLine.text = inputLine.text.dropLast(1)
+                    inputLine.append("0" + str)
+                }
+            }
+            else if (inputLine.text.last() == '(' && str != "-") {}
             else inputLine.append(str)
+        }
+        else if (str == "√"){
+            if(getFirstDigit(inputLine.text.toString()) == "0"){
+                inputLine.text = inputLine.text.dropLast(1)
+            }
+            else if (inputLine.text.last() in arrayOf('π','e','!',')') || inputLine.text.last().isDigit())
+                inputLine.append("×")
+            inputLine.append(str)
         }
         else if (str in arrayOf("(",")")){
             if(str == "("){
@@ -56,7 +94,7 @@ object Handler {
                 inputLine.append(str)
             }
             else{
-                if(inputLine.text.last() in "+-×÷"){
+                if(inputLine.text.last() in "+-×÷^√"){
 
                 }
                 else if(getBracketsBalans(inputLine.text.toString())> 0){
@@ -68,6 +106,14 @@ object Handler {
             }
         }
         else if (str in arrayOf("sin", "cos", "tan")){
+            if(getFirstDigit(inputLine.text.toString()) == "0"){
+                inputLine.text = inputLine.text.dropLast(1)
+            }
+            else if (inputLine.text.last() in arrayOf('π','e','!',')') || inputLine.text.last().isDigit())
+                inputLine.append("×")
+            inputLine.append(this.trigonometryConf + str + "(")
+        }
+        else if (str in arrayOf("lg", "ln")){
             if(getFirstDigit(inputLine.text.toString()) == "0"){
                 inputLine.text = inputLine.text.dropLast(1)
             }
@@ -91,7 +137,7 @@ object Handler {
     private fun updateResultLine(v: View?, inputLine:TextView, resultLine: TextView){
         var tempLine:String = inputLine.text.toString()
         if (tempLine.last() in arrayOf('+', '-', '.')) tempLine += "0"
-        if (tempLine.last() in arrayOf('×','÷')) tempLine += "1"
+        if (tempLine.last() in arrayOf('×','÷','^','√')) tempLine += "1"
         if (tempLine.last() == '('){
             if(tempLine.length > 1 && tempLine.reversed()[1] in arrayOf('×','÷','+','-')){
                 tempLine += getTempNum(tempLine.reversed()[1].toString())
@@ -105,27 +151,38 @@ object Handler {
         }
         tempLine = tempLine.replace('×', '*')
         tempLine = tempLine.replace('÷', '/')
+        tempLine = tempLine.replace("lg", "log10")
+        tempLine = tempLine.replace("ln", "log")
+        tempLine = tempLine.replace("√", "#")
+        tempLine = tempLine.replace("°", "~")
+        tempLine = tempLine.replace(".~", ".0~")
+        try {
+            val expression = ExpressionBuilder(tempLine).operator(factorial,root,degree).build()
+            val numResult = expression.evaluate()
 
-        val expression = ExpressionBuilder(tempLine).build()
-        val numResult = expression.evaluate()
+            //Leave only 6 digits after dot
+            var finalAnswer = String.format("%.6f", numResult).toDouble()
+            var result = "= " + finalAnswer.toString()
 
-        //Leave only 6 digits after dot
-        var finalAnswer = String.format("%.6f", numResult).toDouble()
-        var result = "= " + finalAnswer.toString()
-
-        for(sym in result.reversed()){
-            if(sym == '0'){
-                result = result.dropLast(1)
-                continue
-            }
-            if(sym == '.'){
-                result = result.dropLast(1)
+            for (sym in result.reversed()) {
+                if (sym == '0') {
+                    result = result.dropLast(1)
+                    continue
+                }
+                if (sym == '.') {
+                    result = result.dropLast(1)
+                    break
+                }
                 break
             }
-            break
+            if(result == "= -0") result = "= 0"
+            resultLine.text = result
+
         }
-        resultLine.text = result
-        resultLine.text = tempLine
+        catch (e: Exception){
+            resultLine.text = e.message
+        }
+        //resultLine.text = tempLine
     }
 
     fun clean(v: View?, inputLine:TextView, resultLine: TextView){
@@ -137,20 +194,33 @@ object Handler {
 
     fun stepBack(v: View?, inputLine:TextView, resultLine: TextView){
         if(this.currentAnswer != "") return
-        for (literal in arrayOf("sin(", "cos(", "tan(","asin(", "acos(", "atan(","lg(", "ln(")) {
+        for (literal in arrayOf("asin(", "acos(", "atan(","sin(", "cos(", "tan(","lg(", "ln(")) {
             if (inputLine.text.endsWith(literal)) {
                 inputLine.text = inputLine.text.dropLast(literal.length)
+                if(inputLine.text.isEmpty()) {
+                    inputLine.text = "0"
+                    resultLine.text = ""
+                    return
+                }
                 updateResultLine(v,inputLine, resultLine)
                 return
             }
         }
-        inputLine.text = inputLine.text.dropLast(1)
-        if(inputLine.text.length == 0) {
-            inputLine.text = "0"
-            if(inputLine.text.last() == '0') {
-                resultLine.text = ""
-                return
+        if(inputLine.text.last() == '°'){
+            if(inputLine.text.reversed()[2] == '(')
+                inputLine.text = inputLine.text.dropLast(2)
+            else{
+                inputLine.text = inputLine.text.dropLast(2)
+                inputLine.append("°")
             }
+            updateResultLine(v,inputLine, resultLine)
+            return
+        }
+        inputLine.text = inputLine.text.dropLast(1)
+        if(inputLine.text.isEmpty()) {
+            inputLine.text = "0"
+            resultLine.text = ""
+            return
         }
         updateResultLine(v,inputLine, resultLine)
     }
@@ -174,7 +244,14 @@ object Handler {
 
     fun printResult(v: View? ,inputLine:TextView, resultLine: TextView){
         if(inputLine.text.length == 0 && inputLine.text.last() == '0') return
-        if(resultLine.text.drop(2).toString() != "Infinit" && resultLine.text.drop(2).toString() != "NaN")
+        if(resultLine.text.drop(2).toString() != "Infinity"
+            && resultLine.text.drop(2).toString() != "-Infinity"
+            && resultLine.text.drop(2).toString() != "NaN"
+            && resultLine.text.drop(2).toString() != "-NaN"
+            && "token" !in resultLine.text
+            && "Error" !in resultLine.text
+            && "operator" !in resultLine.text
+                )
             this.currentAnswer = resultLine.text.drop(2).toString()
         else currentAnswer = "0"
         maxTextSize(v,inputLine, resultLine)
@@ -206,8 +283,36 @@ object Handler {
         return false
     }
     fun isArcAvailable():Boolean{
-        if (angleConf == "deg") return true
+        if (angleConf == "rad") return true
         return false
     }
 
+}
+
+var factorial: Operator = object : Operator("!", 1, true, PRECEDENCE_POWER + 1) {
+    override fun apply(vararg args: Double): Double {
+        val arg = args[0].toInt()
+        require(arg.toDouble() == args[0]) { "Not integer" }
+        require(arg >= 0) { "Error" }
+        var result = 1.0
+        for (i in 1..arg) {
+            result *= i.toDouble()
+        }
+        return result
+    }
+}
+
+var root: Operator = object : Operator("#", 1, false, PRECEDENCE_POWER + 1) {
+    override fun apply(vararg args: Double): Double {
+        val arg = args[0].toDouble()
+        require(arg >= 0) { "Error" }
+        return sqrt(arg)
+    }
+}
+
+var degree: Operator = object : Operator("~", 1, true, PRECEDENCE_POWER + 1) {
+    override fun apply(vararg args: Double): Double {
+        val arg = args[0].toDouble()
+        return arg*Math.PI/180
+    }
 }

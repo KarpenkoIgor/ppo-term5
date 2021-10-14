@@ -137,7 +137,7 @@ class ScientificCalculator : Fragment() {
     private fun changeModToSimple(){
         if(resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE){
             requireActivity().supportFragmentManager.beginTransaction().apply {
-                replace(R.id.flFragment, SimpleCalculator())
+                replace(R.id.flFragment, SimpleCalculator(), "SIMPLE")
                 commit()
             }
         }

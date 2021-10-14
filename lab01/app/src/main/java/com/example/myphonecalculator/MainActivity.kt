@@ -13,20 +13,59 @@ import androidx.fragment.app.FragmentManager
 
 class MainActivity : AppCompatActivity() {
 
-    private var currentAnswer = ""
+    private val simpleCalculator = SimpleCalculator()
+    private val scientificCalculator = ScientificCalculator()
+    private var currentMod:String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val simpleCalculator = SimpleCalculator()
-        val scientificCalculator = ScientificCalculator()
-        var lastUsedFragment = SimpleCalculator()
-        supportFragmentManager.beginTransaction().apply {
-            replace(R.id.flFragment, scientificCalculator)
-            commit()
+        findViewById<TextView>(R.id.math_operation).setText(currentMod)
+        if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            supportFragmentManager.beginTransaction().apply {
+                replace(R.id.flFragment, scientificCalculator,"SCIENCE")
+                commit()
+            }
+        }
+        else {
+            supportFragmentManager.beginTransaction().apply {
+                replace(R.id.flFragment, simpleCalculator,"SIMPLE")
+                commit()
+                }
         }
         val inputLine:TextView = findViewById(R.id.math_operation)
         inputLine.text = "0"
     }
+    fun setMod(str:String){
 
+    }
+    override fun onSaveInstanceState(outState: Bundle) {
+        if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
+            if(supportFragmentManager.findFragmentByTag("SIMPLE") != null){
+                currentMod = "Simple"
+            }
+            else if (supportFragmentManager.findFragmentByTag("SCIENCE") != null) currentMod = "Science"
+        outState.putString("my_text", findViewById<TextView>(R.id.math_operation).text.toString())
+        outState.putString("mod", currentMod)
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedIntanceState: Bundle) {
+        super.onRestoreInstanceState(savedIntanceState)
+        this.currentMod = savedIntanceState.getString("mod").toString()
+        if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT){
+            if(savedIntanceState.getString("mod") == "Science")
+                supportFragmentManager.beginTransaction().apply {
+                    replace(R.id.flFragment, scientificCalculator,"SCIENCE")
+                    commit()
+                }
+            else
+                supportFragmentManager.beginTransaction().apply {
+                    replace(R.id.flFragment, simpleCalculator,"SIMPLE")
+                    commit()
+                }
+        }
+        findViewById<TextView>(R.id.math_operation).setText(savedIntanceState.getString("my_text"))
+
+    }
 }

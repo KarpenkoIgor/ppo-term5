@@ -43,6 +43,7 @@ object Handler {
     var angleConf = "rad"
     var trigonometryConf = ""
     var orientation = "port"
+    var textForInputLine = ""
 
     fun handler(v: View?, str:String, inputLine:TextView, resultLine: TextView){
         minTextSize(v,inputLine, resultLine)

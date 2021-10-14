@@ -76,8 +76,9 @@ class SimpleCalculator : Fragment() {
     }
 
     private fun changeModToScience(){
+
         requireActivity().supportFragmentManager.beginTransaction().apply {
-            replace(R.id.flFragment, ScientificCalculator())
+            replace(R.id.flFragment, ScientificCalculator(), "SCIENCE")
             commit()
         }
     }
